@@ -1,0 +1,127 @@
+
+create table jockeys
+(
+DNI   		varchar(9),
+Nombre 		varchar(20),
+Altura		integer,
+Peso    	integer,
+Telefono	varchar(12),
+
+primary key (DNI)
+);
+
+create table participaciones
+(
+CodPart			varchar(4),
+CodCarrera		varchar(4),
+CodCaballo		varchar(4),
+DNI				varchar(9),
+Dorsal			integer(2),
+PosicionFinal	integer(2),
+
+primary key (CodPart),
+foreign key (CodCarrera) references carreras (CodCarrera),
+foreign key (CodCaballo) references caballos (CodCaballo),
+foreign key (DNI) references jockeys (DNI)
+);
+
+create table carreras
+(
+CodCarrera		varchar(4),
+FechaHora		date,
+ImportePremio	integer(7),
+LimiteApuesta	integer(5),
+FechaNacMin		date,
+FechaNacMax		date,
+
+primary key (CodCarrera)
+);
+
+create table clientes
+(
+DNI		varchar(9),
+Nombre	varchar(20),
+Apellido1	varchar(15),
+Apellido2	varchar(15),
+Direccion	varchar(30),
+Localidad	varchar(15),
+Provincia	varchar(10),
+Telefono	varchar(12),
+
+primary key (DNI)
+);
+
+create table apuestas
+(
+DNI 		varchar(9),
+CodPart		varchar(4),
+Importe 	integer(5),
+TantoAUno	?,
+
+foreign key (DNI) references jockeys (DNI),
+foreign key (CodPart) references participaciones (CodPart)
+);
+
+create table propietarios
+(
+NIF		varchar(9),?
+Cuota	integer(5),
+);
+
+create table caballos
+(
+CodCaballo	varchar(4),
+NIF			varchar(9),
+Nombre		varchar(15),
+FechaNac 	date,
+Raza		varchar(15),
+
+primary key (CodCaballo),
+foreign key (NIF) references propietarios (NIF)
+);
+
+create table caballoscarreras
+(
+CodCaballo	varchar(4),
+Peso		integer(3),
+Nacionalidad	varchar(10),
+
+primary key (CodCaballo) references caballos (CodCaballo)
+);
+
+create table instalaciones
+(
+CodInstal	varchar(4),
+Nombre		varchar(10),
+
+primary key (CodInstal)
+);
+
+create table cuadras
+(
+CodInstal	varchar(4),
+Aforo		integer(3),
+Tamano		?,
+Tipo		?,
+
+primary key CodInstal references instalaciones (CodInstal)
+);
+
+create table pistas
+(
+CodInstal	varchar(4),
+Superficie	integer(4),
+Longitud	integer(4),
+
+primary key CodInstal references instalaciones (CodInstal)
+);
+
+create table cuadrante
+(
+CodCaballo	varchar(4),
+CodInstal	varchar(4),
+FechaHora	date,
+
+primary key CodInstal references instalaciones (CodInstal),
+primary key (CodCaballo) references caballos (CodCaballo)
+);
