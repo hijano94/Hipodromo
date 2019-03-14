@@ -31,12 +31,12 @@ values ('89189748F', 'Alonso', '1.64', '56', '651274143');
 
 create table participaciones
 (
-CodPart			varchar(4),
-CodCarrera		varchar(4),
+CodPart			varchar(2),
+CodCarrera		varchar(2),
 CodCaballo		varchar(4),
 DNI				varchar(9),
-Dorsal			integer(2),
-PosicionFinal	integer(2),
+Dorsal			integer,
+PosicionFinal	integer,
 
 primary key (CodPart),
 foreign key (CodCarrera) references carreras (CodCarrera),
@@ -44,8 +44,91 @@ foreign key (CodCaballo) references caballos (CodCaballo),
 foreign key (DNI) references jockeys (DNI)
 );
 
+
 insert into participaciones (CodPart, CodCarrera, CodCaballo, DNI, Dorsal, PosicionFinal)
-values ('0001','0001','0001','');
+values ('01','01','01','78432773E','03','2');
+insert into participaciones
+values ('02','01','02','72347919U','01','3');
+insert into participaciones
+values ('03','01','01','78432773E','03','1');
+
+insert into participaciones
+values ('01','02','01','78432773E','03','3');
+insert into participaciones
+values ('02','02','01','78432773E','03','1');
+insert into participaciones
+values ('03','02','01','78432773E','03','2');
+
+insert into participaciones
+values ('01','03','01','78432773E','03','1');
+insert into participaciones
+values ('02','03','0001','78432773E','03','3');
+insert into participaciones
+values ('03','03','0001','78432773E','03','2');
+
+insert into participaciones
+values ('01','04','0001','78432773E','03','1');
+insert into participaciones
+values ('02','04','0001','78432773E','03','2');
+insert into participaciones
+values ('03','04','0001','78432773E','03','3');
+
+insert into participaciones
+values ('01','05','0001','78432773E','03','2');
+insert into participaciones
+values ('02','05','0001','78432773E','03','1');
+insert into participaciones
+values ('03','05','0001','78432773E','03','3');
+
+insert into participaciones
+values ('01','06','0001','78432773E','03','');
+insert into participaciones
+values ('02','06','0001','78432773E','03','4');
+insert into participaciones
+values ('03','06','0001','78432773E','03','4');
+
+insert into participaciones
+values ('01','07','0001','78432773E','03','4');
+insert into participaciones
+values ('02','07','0001','78432773E','03','4');
+insert into participaciones
+values ('03','07','0001','78432773E','03','4');
+
+insert into participaciones
+values ('01','08','0001','78432773E','03','4');
+insert into participaciones
+values ('02','08','0001','78432773E','03','4');
+insert into participaciones
+values ('03','08','0001','78432773E','03','4');
+
+insert into participaciones
+values ('01','09','0001','78432773E','03','4');
+insert into participaciones
+values ('02','09','0001','78432773E','03','4');
+insert into participaciones
+values ('03','09','0001','78432773E','03','4');
+
+insert into participaciones
+values ('01','10','0001','78432773E','03','4');
+insert into participaciones
+values ('02','10','0001','78432773E','03','4');
+insert into participaciones
+values ('03','10','0001','78432773E','03','4');
+
+insert into participaciones
+values ('01','11','0001','78432773E','03','4');
+insert into participaciones
+values ('02','11','0001','78432773E','03','4');
+insert into participaciones
+values ('03','11','0001','78432773E','03','4');
+
+insert into participaciones
+values ('01','12','0001','78432773E','03','4');
+insert into participaciones
+values ('02','12','0001','78432773E','03','4');
+insert into participaciones
+values ('03','12','0001','78432773E','03','4');
+
 
 create table carreras
 (
@@ -58,6 +141,32 @@ FechaNacMax		date,
 
 primary key (CodCarrera)
 );
+
+insert into carreras (CodCarrera, FechaHora, ImportePremio, LimiteApuesta, FechaNacMin, FechaNacMax)
+values	('01', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'5000','200',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('02', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'2000','70',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('03', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'500','190',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('04', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'2000','80',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('05', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'3000','75',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('06', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'1000','340',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('07', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'400','55',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('08', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'50','20',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('09', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'10000','5000',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('10', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'7050','100',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('11', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'3800','75',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into carreras
+values	('12', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'5000','25',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 
 create table clientes
 (
@@ -74,7 +183,18 @@ primary key (DNI)
 );
 
 insert into clientes (DNI, Nombre, Apellido1, Apellido2, Direccion, Localidad, Provincia, Telefono)
-values ('');
+values ('89717941U','Alberto','Gomez','Perez','C/verde','Sevilla','Sevilla','732762722');
+insert into clientes
+values ('23879284E','Raul','Garcia','Perez','C/rosa','Dos hermanas','Sevilla','613394102');
+insert into clientes
+values ('12391486Y','Roberto','Lopez','Tello','C/cruz verde','Utrera','Sevilla','610949841');
+insert into clientes
+values ('19879836T','Manolo','Hijano','Lou','C/reverte','Carmona','Sevilla','709403489');
+insert into clientes
+values ('10419214W','Laura','Fernandez','Lopez','C/rosendo','Sevilla','Sevilla','690410393');
+insert into clientes
+values ('13059373D','María','Hidalgo','Bilbao','C/desengaño','Osuna','Sevilla','654242339');
+
 
 create table apuestas
 (
@@ -86,6 +206,8 @@ TantoAUno	?,
 foreign key (DNI) references jockeys (DNI),
 foreign key (CodPart) references participaciones (CodPart)
 );
+
+
 
 create table propietarios
 (
