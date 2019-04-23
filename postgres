@@ -3,7 +3,7 @@ create table jockeys
 (
 DNI   		varchar(9),
 Nombre 		varchar(20),
-Altura		integer(3),
+Altura		number(3),
 Peso    	integer(3),
 Telefono	varchar(12),
 
@@ -46,93 +46,93 @@ foreign key (DNI) references jockeys (DNI)
 
 
 insert into participaciones (CodPart, CodCarrera, CodCaballo, DNI, Dorsal, PosicionFinal)
-values ('01','01','01','78432773E','03','2');
+values ('01','01','01','78432773E','14','2');
 insert into participaciones
-values ('02','01','02','72347919U','01','3');
+values ('02','01','03','99764244W','24','3');
 insert into participaciones
-values ('03','01','01','78432773E','03','1');
+values ('03','01','04','11772636E','15','1');
 
 insert into participaciones
-values ('01','02','01','78432773E','03','3');
+values ('04','02','01','11772636E','12','3');
 insert into participaciones
-values ('02','02','01','78432773E','03','1');
+values ('05','02','08','71234522I','34','1');
 insert into participaciones
-values ('03','02','01','78432773E','03','2');
+values ('06','02','13','78432773E','54','2');
 
 insert into participaciones
-values ('01','03','01','78432773E','03','1');
+values ('07','03','11','59249165G','05','1');
 insert into participaciones
-values ('02','03','0001','78432773E','03','3');
+values ('08','03','12','89189748F','01','3');
 insert into participaciones
-values ('03','03','0001','78432773E','03','2');
+values ('09','03','07','28278764O','73','2');
 
 insert into participaciones
-values ('01','04','0001','78432773E','03','1');
+values ('10','04','14','78914674D','03','1');
 insert into participaciones
-values ('02','04','0001','78432773E','03','2');
+values ('11','04','01','59249165G','07','2');
 insert into participaciones
-values ('03','04','0001','78432773E','03','3');
+values ('12','04','03','77185561E','27','3');
 
 insert into participaciones
-values ('01','05','0001','78432773E','03','2');
+values ('13','05','10','78432773E','09','2');
 insert into participaciones
-values ('02','05','0001','78432773E','03','1');
+values ('14','05','04','71234522I','31','1');
 insert into participaciones
-values ('03','05','0001','78432773E','03','3');
+values ('15','05','08','09823785H','52','3');
 
 insert into participaciones
-values ('01','06','0001','78432773E','03','');
+values ('16','06','14','78914674D','04','3');
 insert into participaciones
-values ('02','06','0001','78432773E','03','4');
+values ('17','06','11','99764244W','41','1');
 insert into participaciones
-values ('03','06','0001','78432773E','03','4');
+values ('18','06','07','89189748F','21','2');
 
 insert into participaciones
-values ('01','07','0001','78432773E','03','4');
+values ('19','07','08','78914674D','61','3');
 insert into participaciones
-values ('02','07','0001','78432773E','03','4');
+values ('20','07','03','59249165G','12','2');
 insert into participaciones
-values ('03','07','0001','78432773E','03','4');
+values ('21','07','13','99764244W','92','1');
 
 insert into participaciones
-values ('01','08','0001','78432773E','03','4');
+values ('22','08','04','78914674D','37','2');
 insert into participaciones
-values ('02','08','0001','78432773E','03','4');
+values ('23','08','07','78432773E','08','3');
 insert into participaciones
-values ('03','08','0001','78432773E','03','4');
+values ('24','08','13','28278764O','10','1');
 
 insert into participaciones
-values ('01','09','0001','78432773E','03','4');
+values ('25','09','14','99764244W','29','2');
 insert into participaciones
-values ('02','09','0001','78432773E','03','4');
+values ('26','09','01','28278764O','14','1');
 insert into participaciones
-values ('03','09','0001','78432773E','03','4');
+values ('27','09','12','78914674D','17','3');
 
 insert into participaciones
-values ('01','10','0001','78432773E','03','4');
+values ('28','10','13','71234522I','29','3');
 insert into participaciones
-values ('02','10','0001','78432773E','03','4');
+values ('29','10','03','28278764O','37','1');
 insert into participaciones
-values ('03','10','0001','78432773E','03','4');
+values ('30','10','01','78432773E','59','2');
 
 insert into participaciones
-values ('01','11','0001','78432773E','03','4');
+values ('31','11','07','28278764O','17','1');
 insert into participaciones
-values ('02','11','0001','78432773E','03','4');
+values ('32','11','08','77185561E','23','2');
 insert into participaciones
-values ('03','11','0001','78432773E','03','4');
+values ('33','11','14','09823785H','06','3');
 
 insert into participaciones
-values ('01','12','0001','78432773E','03','4');
+values ('34','12','04','89189748F','71','1');
 insert into participaciones
-values ('02','12','0001','78432773E','03','4');
+values ('35','12','03','11772636E','88','3');
 insert into participaciones
-values ('03','12','0001','78432773E','03','4');
+values ('36','12','10','59249165G','66','2');
 
 
 create table carreras
 (
-CodCarrera		varchar(4),
+CodCarrera		varchar(2),
 FechaHora		date,
 ImportePremio	integer(7),
 LimiteApuesta	integer(5),
@@ -143,29 +143,100 @@ primary key (CodCarrera)
 );
 
 insert into carreras (CodCarrera, FechaHora, ImportePremio, LimiteApuesta, FechaNacMin, FechaNacMax)
-values	('01', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'5000','200',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('01', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'5000',
+		'200',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('02', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'2000','70',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('02', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'2000',
+		'70',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('03', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'500','190',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('03', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'500',
+		'190',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('04', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'2000','80',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('04', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'2000',
+		'80',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('05', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'3000','75',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('05', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'3000',
+		'75',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('06', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'1000','340',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('06', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'1000',
+		'340',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('07', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'400','55',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('07', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'400',
+		'55',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('08', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'50','20',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('08', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		50',
+		'20',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('09', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'10000','5000',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('09', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'10000',
+		'5000',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('10', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'7050','100',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('10', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'7050',
+		'100',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('11', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'3800','75',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('11', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'3800',
+		'75',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+
 insert into carreras
-values	('12', TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),'5000','25',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+values	('12', 
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		'5000',
+		'25',
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'),
+		TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
 
 
 create table clientes
@@ -207,6 +278,46 @@ foreign key (DNI) references jockeys (DNI),
 foreign key (CodPart) references participaciones (CodPart)
 );
 
+insert into apuestas (DNI, CodPart, Importe, TantoAUno)
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
+insert into apuestas
+values ('','','','');
 
 
 create table propietarios
@@ -215,17 +326,63 @@ NIF		varchar(9),?
 Cuota	integer(5),
 );
 
+insert into propietarios (NIF, Cuota)
+values ('89864986N','300');
+insert into pripietarios
+values ('46428283C','500');
+insert into pripietarios
+values ('78512172Y','600');
+insert into pripietarios
+values ('23571263R','500');
+insert into pripietarios
+values ('98171984U','200');
+insert into pripietarios
+values ('03429855T','700');
+
 create table caballos
 (
-CodCaballo	varchar(4),
+CodCaballo	varchar(2),
 NIF			varchar(9),
-Nombre		varchar(15),
+Nombre		varchar(20),
 FechaNac 	date,
 Raza		varchar(15),
 
 primary key (CodCaballo),
 foreign key (NIF) references propietarios (NIF)
 );
+
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('01','89864986N','Veillentif',TO_DATE('02/04/2009','DD/MM/YYYY'),'Andaluz');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('02','46428283C','Janto',TO_DATE('05/07/2011','DD/MM/YYYY'),'Arabe');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('03','89864986N','Centauro',TO_DATE('22/08/2008','DD/MM/YYYY'),'Tennessee');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('04','78512172Y','Caballo de Troya',TO_DATE('02/04/2010','DD/MM/YYYY'),'Pura Sangre');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('05','23571263R','Arion',TO_DATE('12/02/2012','DD/MM/YYYY'),'Morgan');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('06','98171984U','Broiefort',TO_DATE('24/11/2013','DD/MM/YYYY'),'Apalusa');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('07','89864986N','Pegaso',TO_DATE('05/05/2013','DD/MM/YYYY'),'Paint Horse');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('08','03429855T','Plata',TO_DATE('05/02/2013','DD/MM/YYYY'),'Quarter Horse');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('09','03429855T','Rocinante',TO_DATE('17/06/2013','DD/MM/YYYY'),'Andaluz');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('10','89864986N','Sombregris',TO_DATE('23/09/2013','DD/MM/YYYY'),'Morgan');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('11','98171984U','Tornado',TO_DATE('19/10/2013','DD/MM/YYYY'),'Pura Sangre');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('12','23571263R','Solow',TO_DATE('29/04/2013','DD/MM/YYYY'),'Arabe');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('13','89864986N','Hickstead',TO_DATE('02/04/2009','DD/MM/YYYY'),'Morgan');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('14','78512172Y','Fuego XVII',TO_DATE('12/07/2013','DD/MM/YYYY'),'Andaluz');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('15','78512172Y','Lexinton',TO_DATE('24/02/2013','DD/MM/YYYY'),'Tennessee');
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
+values ('16','46428283C','Eclipse',TO_DATE('30/03/2013','DD/MM/YYYY'),'Andaluz');
 
 create table caballoscarreras
 (
@@ -236,6 +393,28 @@ Nacionalidad	varchar(10),
 primary key (CodCaballo) references caballos (CodCaballo)
 );
 
+insert into caballoscarreras (CodCaballo, Peso, Nacionalidad)
+values ('01','500','España');
+insert into caballoscarreras
+values ('03','460','Francia');
+insert into caballoscarreras
+values ('04','490','Italia');
+insert into caballoscarreras
+values ('07','510','España');
+insert into caballoscarreras
+values ('08','504','España');
+insert into caballoscarreras
+values ('10','487','Portugal');
+insert into caballoscarreras
+values ('11','512','Marruecos');
+insert into caballoscarreras
+values ('12','492','Francia');
+insert into caballoscarreras
+values ('13','502','Italia');
+insert into caballoscarreras
+values ('14','488','Francia');
+
+
 create table instalaciones
 (
 CodInstal	varchar(4),
@@ -243,6 +422,34 @@ Nombre		varchar(10),
 
 primary key (CodInstal)
 );
+
+insert into instalaciones (CodInstal, Nombre)
+values ('01','');
+insert into instalaciones (CodInstal, Nombre)
+values ('02','');
+insert into instalaciones (CodInstal, Nombre)
+values ('02','');
+insert into instalaciones (CodInstal, Nombre)
+values ('03','');
+insert into instalaciones (CodInstal, Nombre)
+values ('04','');
+insert into instalaciones (CodInstal, Nombre)
+values ('05','');
+insert into instalaciones (CodInstal, Nombre)
+values ('06','');
+insert into instalaciones (CodInstal, Nombre)
+values ('07','');
+insert into instalaciones (CodInstal, Nombre)
+values ('08','');
+insert into instalaciones (CodInstal, Nombre)
+values ('09','');
+insert into instalaciones (CodInstal, Nombre)
+values ('10','');
+insert into instalaciones (CodInstal, Nombre)
+values ('11','');
+insert into instalaciones (CodInstal, Nombre)
+values ('12','');
+
 
 create table cuadras
 (
@@ -254,6 +461,23 @@ Tipo		?,
 primary key CodInstal references instalaciones (CodInstal)
 );
 
+insert into cuadras (CodInstal, Aforo, Tamano, Tipo)
+values ('01','','','');
+insert into cuadras
+values ('02','','','');
+insert into cuadras
+values ('03','','','');
+insert into cuadras
+values ('04','','','');
+insert into cuadras
+values ('05','','','');
+insert into cuadras
+values ('06','','','');
+insert into cuadras
+values ('07','','','');
+insert into cuadras
+values ('08','','','');
+
 create table pistas
 (
 CodInstal	varchar(4),
@@ -262,6 +486,16 @@ Longitud	integer(4),
 
 primary key CodInstal references instalaciones (CodInstal)
 );
+
+insert into pistas (CodInstal, Superficie, Longitud)
+values ('09','220','2000');
+insert into pistas
+values ('10','440','3000');
+insert into pistas
+values ('11','300','2000');
+insert into pistas
+values ('12','500','4000');
+
 
 create table cuadrante
 (
@@ -272,3 +506,46 @@ FechaHora	date,
 primary key CodInstal references instalaciones (CodInstal),
 primary key (CodCaballo) references caballos (CodCaballo)
 );
+
+insert into cuadrante (CodCaballo, CodInstall, FechaHora)
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
+insert into cuadrante
+values ('','',TO_DATE('24/03/13 16:45','DD/MM/YY HH24:MI'));
