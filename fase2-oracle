@@ -4,7 +4,7 @@ create table jockeys
 (
 DNI   		varchar2(9),
 Nombre 		varchar2(20),
-Altura		number(3),
+Altura		number(3,2),
 Peso    	number(3),
 Telefono	varchar2(12),
 constraint pk_jockeys primary key(DNI),
@@ -12,23 +12,23 @@ constraint ck_dni CHECK(REGEXP_LIKE(DNI,'[0-9]{8}[A-Z]{1}'))
 );
 
 insert into jockeys (DNI, Nombre, Altura, Peso, Telefono)
-values ('77185561E', 'Carlos', '184', '75', '655064404');
+values ('77185561E', 'Carlos', '1,84', '75', '655064404');
 insert into jockeys 
-values ('99764244W', 'Maria', '155', '55', '625168472');
+values ('99764244W', 'Maria', '1,55', '55', '625168472');
 insert into jockeys 
-values ('11772636E', 'Alvaro', '160', '67', '666333869');
+values ('11772636E', 'Alvaro', '1,60', '67', '666333869');
 insert into jockeys 
-values ('71234522I', 'Federico', '154', '75', '712847902');
+values ('71234522I', 'Federico', '1,54', '75', '712847902');
 insert into jockeys 
-values ('28278764O', 'Mario', '182', '95', '640942534');
+values ('28278764O', 'Mario', '1,82', '95', '640942534');
 insert into jockeys 
-values ('59249165G', 'Lucia', '176', '65', '687517851');
+values ('59249165G', 'Lucia', '1,76', '65', '687517851');
 insert into jockeys 
-values ('09823785H', 'Claudia', '150', '44', '794042092');
+values ('09823785H', 'Claudia', '1,50', '44', '794042092');
 insert into jockeys 
-values ('78914674D', 'Manolo', '161', '59', '609516432');
+values ('78914674D', 'Manolo', '1,61', '59', '609516432');
 insert into jockeys 
-values ('89189748F', 'Alonso', '164', '56', '651274143');
+values ('89189748F', 'Alonso', '1,64', '56', '651274143');
 
 3 ###############################################################
 #################### Tabla OK | Restricciones OK | Datos(30) OK

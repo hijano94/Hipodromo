@@ -30,16 +30,16 @@ values ('78914674D', 'Manolo', '1.61', '59.4', '609516432');
 insert into jockeys 
 values ('89189748F', 'Alonso', '1.64', '56.6', '651274143');
 
-~ #############################################################
+OK #############################################################
 
 create table participaciones
 (
-CodPart			varchar(2),
-CodCarrera		varchar(2),
-CodCaballo		varchar(4),
-DNI				varchar(9),
-Dorsal			integer,
-PosicionFinal	integer,
+CodPart varchar(2),
+CodCarrera varchar(2),
+CodCaballo varchar(4),
+DNI varchar(9),
+Dorsal integer,
+PosicionFinal integer,
 constraint pk_part primary key (CodPart),
 foreign key (CodCarrera) references carreras (CodCarrera),
 foreign key (CodCaballo) references caballos (CodCaballo),
@@ -135,140 +135,69 @@ OK #############################################################
 create table carreras
 (
 CodCarrera varchar(2),
-FechaHora datetime,
+Fecha date,
+Hora time,
 ImportePremio integer(7),
 LimiteApuesta decimal(7,2),
 FechaNacMin date,
 FechaNacMax date,
 constraint pk_carreras primary key (CodCarrera),
-constraint ck_diaCarr CHECK(TO_CHAR(Fecha,'DD') LIKE '1')
+constraint ck_diaCarr CHECK(weekday(Fecha) = 6),
+constraint ck_hora check(Hora BETWEEN CONVERT('09:00:00' , time) AND CONVERT('14:00:00' , time)),
+constraint ck_fecha check(DAYOFYEAR(Fecha) BETWEEN 293 AND 366 OR DAYOFYEAR(Fecha) BETWEEN 0 AND 62)
 );
 
-constraint ck_hora check(TO_NUMBER(TO_CHAR(Hora,'HHMM'),'9999') BETWEEN 0900 AND 1400)
-,
-constraint ck_fecha check(to_number(to_char(Fecha,'MMDD'),'9999') BETWEEN 1020 AND 1231 OR to_number(to_char(Fecha,'MMDD'),'9999') BETWEEN 0101 AND 0302)
-
 insert into carreras (CodCarrera, Fecha, Hora, ImportePremio, LimiteApuesta, FechaNacMin, FechaNacMax)
-values	('01', 
-		TO_DATE('18/11/18','DD/MM/YY'),
-		'12:45',
-		'5000',
-		'200',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/09','DD/MM/YY'));
+values ('01', STR_TO_DATE('18/11/18','%d/%m/%Y'),'12:45','5000','200',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/09','%d/%m/%Y'));
 
 insert into carreras
-values	('02', 
-		TO_DATE('21/10/18','DD/MM/YY'),
-		'11:45',
-		'2000',
-		'70',
-		TO_DATE('01/01/10','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
-insert into carreras
-values	('03', 
-		TO_DATE('20/10/19','DD/MM/YY'),
-		'10:45',
-		'500',
-		'190',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('02',STR_TO_DATE('21/10/18','%d/%m/%Y'),'11:45','2000','70',STR_TO_DATE('01/01/10','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('04', 
-		TO_DATE('03/02/19','DD/MM/YY'),
-		'10:00',
-		'2000',
-		'80',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('03',STR_TO_DATE('20/10/19','%d/%m/%Y'),'10:45','500','190',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('05', 
-		TO_DATE('04/02/18','DD/MM/YY'),
-		'09:30',
-		'3000',
-		'75',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('04',STR_TO_DATE('03/02/19','%d/%m/%Y'),'10:00','2000','80',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('06', 
-		TO_DATE('21/01/18','DD/MM/YY'),
-		'13:45',
-		'1000',
-		'340',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('05',STR_TO_DATE('04/02/18','%d/%m/%Y'),'09:30','3000','75',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('07', 
-		TO_DATE('11/02/18','DD/MM/YY'),
-		'12:15',
-		'400',
-		'55',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('06', STR_TO_DATE('21/01/18','%d/%m/%Y'),'13:45','1000','340',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('08', 
-		TO_DATE('10/11/19','DD/MM/YY'),
-		'11:45',
-		'50',
-		'20',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('07', STR_TO_DATE('11/02/18','%d/%m/%Y'),'12:15','400','55',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('09', 
-		TO_DATE('17/02/19','DD/MM/YY'),
-		'11:35',
-		'10000',
-		'5000',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('08', STR_TO_DATE('10/11/19','%d/%m/%Y'),'11:45','50','20',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('10', 
-		TO_DATE('16/12/18','DD/MM/YY'),
-		'10:45',
-		'7050',
-		'100',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('09', STR_TO_DATE('17/02/19','%d/%m/%Y'),'11:35','10000','5000',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('11', 
-		TO_DATE('28/10/18','DD/MM/YY'),
-		'11:00',
-		'3800',
-		'75',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('10',STR_TO_DATE('16/12/18','%d/%m/%Y'),'10:45','7050','100',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 insert into carreras
-values	('12', 
-		TO_DATE('10/02/19','DD/MM/YY'),
-		'13:10',
-		'5000',
-		'25',
-		TO_DATE('01/01/08','DD/MM/YY'),
-		TO_DATE('31/12/13','DD/MM/YY'));
+values	('11', STR_TO_DATE('28/10/18','%d/%m/%Y'),'11:00','3800','75',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
+
+insert into carreras
+values	('12', STR_TO_DATE('10/02/19','%d/%m/%Y'),'13:10','5000', '25',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
+
 
 OK #############################################################
 
 create table clientes
 (
-DNI			varchar(9),
-Nombre		varchar(20),
-Apellido1	varchar(15),
-Apellido2	varchar(15),
-Direccion	varchar(30),
-Localidad	varchar(15),
-Provincia	varchar(10),
-Telefono	varchar(12),
+DNI varchar(9),
+Nombre varchar(20),
+Apellido1 varchar(15),
+Apellido2 varchar(15),
+Direccion varchar(30),
+Localidad varchar(15),
+Provincia varchar(10),
+Telefono varchar(12),
 primary key (DNI),
-constraint ck_dnicli CHECK(DNI ~ '[0-9]{8}[A-Z]{1}')
+constraint ck_dnijoc CHECK(DNI RLIKE '[0-9]{8}[A-Z]{1}')
 );
 
 insert into clientes (DNI, Nombre, Apellido1, Apellido2, Direccion, Localidad, Provincia, Telefono)
@@ -288,10 +217,10 @@ OK #############################################################
 
 create table apuestas
 (
-DNI 		varchar(9),
-CodPart		varchar(2),
-Importe 	integer NOT NULL,
-TantoAUno	varchar(8) NOT NULL,
+DNI varchar(9),
+CodPart varchar(2),
+Importe integer NOT NULL,
+TantoAUno varchar(8) NOT NULL,
 foreign key (DNI) references clientes (DNI),
 foreign key (CodPart) references participaciones (CodPart),
 constraint ck_limi check(Importe <= 9000)
@@ -342,10 +271,10 @@ OK #############################################################
 
 create table propietarios
 (
-NIF		varchar(9),
-Cuota	integer,
-primary key(NIF),
-constraint ck_nif CHECK(NIF ~ '[KLMXYZ][0-9]{7}[A-Z]{1}')
+NIF varchar(9),
+Cuota integer,
+constraint pk_propi primary key(NIF),
+constraint ck_nif CHECK(NIF RLIKE '[KLMXYZ][0-9]{7}[A-Z]{1}')
 );
 
 insert into propietarios (NIF, Cuota)
@@ -365,55 +294,55 @@ OK #############################################################
 
 create table caballos
 (
-CodCaballo	varchar(2),
-NIF			varchar(9),
-Nombre		varchar(20),
-FechaNac 	date,
-Raza		varchar(15),
-primary key (CodCaballo),
+CodCaballo varchar(2),
+NIF varchar(9),
+Nombre varchar(20),
+FechaNac date,
+Raza varchar(15),
+constraint pk_cab primary key (CodCaballo),
 foreign key (NIF) references propietarios (NIF)
 );
 
+insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza) 
+values ('01','K9864986N','Veillentif',STR_TO_DATE('02/04/2009','%d/%m/%Y'),'Andaluz');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('01','K9864986N','Veillentif',TO_DATE('02/04/2009','DD/MM/YYYY'),'Andaluz');
+values ('02','M6428283C','Janto',STR_TO_DATE('05/07/2011','%d/%m/%Y'),'Arabe');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('02','M6428283C','Janto',TO_DATE('05/07/2011','DD/MM/YYYY'),'Arabe');
+values ('03','K9864986N','Centauro',STR_TO_DATE('22/08/2008','%d/%m/%Y'),'Tennessee');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('03','K9864986N','Centauro',TO_DATE('22/08/2008','DD/MM/YYYY'),'Tennessee');
+values ('04','L8512172Y','Caballo de Troya',STR_TO_DATE('02/04/2010','%d/%m/%Y'),'Pura Sangre');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('04','L8512172Y','Caballo de Troya',TO_DATE('02/04/2010','DD/MM/YYYY'),'Pura Sangre');
+values ('05','X3571263R','Arion',STR_TO_DATE('12/02/2012','%d/%m/%Y'),'Morgan');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('05','X3571263R','Arion',TO_DATE('12/02/2012','DD/MM/YYYY'),'Morgan');
+values ('06','Y8171984U','Broiefort',STR_TO_DATE('24/11/2013','%d/%m/%Y'),'Apalusa');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('06','Y8171984U','Broiefort',TO_DATE('24/11/2013','DD/MM/YYYY'),'Apalusa');
+values ('07','K9864986N','Pegaso',STR_TO_DATE('05/05/2013','%d/%m/%Y'),'Paint Horse');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('07','K9864986N','Pegaso',TO_DATE('05/05/2013','DD/MM/YYYY'),'Paint Horse');
+values ('08','Z3429855T','Plata',STR_TO_DATE('05/02/2013','%d/%m/%Y'),'Quarter Horse');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('08','Z3429855T','Plata',TO_DATE('05/02/2013','DD/MM/YYYY'),'Quarter Horse');
+values ('09','Z3429855T','Rocinante',STR_TO_DATE('17/06/2013','%d/%m/%Y'),'Andaluz');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('09','Z3429855T','Rocinante',TO_DATE('17/06/2013','DD/MM/YYYY'),'Andaluz');
+values ('10','K9864986N','Sombregris',STR_TO_DATE('23/09/2013','%d/%m/%Y'),'Morgan');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('10','K9864986N','Sombregris',TO_DATE('23/09/2013','DD/MM/YYYY'),'Morgan');
+values ('11','Y8171984U','Tornado',STR_TO_DATE('19/10/2013','%d/%m/%Y'),'Pura Sangre');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('11','Y8171984U','Tornado',TO_DATE('19/10/2013','DD/MM/YYYY'),'Pura Sangre');
+values ('12','X3571263R','Solow',STR_TO_DATE('29/04/2013','%d/%m/%Y'),'Arabe');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('12','X3571263R','Solow',TO_DATE('29/04/2013','DD/MM/YYYY'),'Arabe');
+values ('13','K9864986N','Hickstead',STR_TO_DATE('02/04/2009','%d/%m/%Y'),'Morgan');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('13','K9864986N','Hickstead',TO_DATE('02/04/2009','DD/MM/YYYY'),'Morgan');
+values ('14','L8512172Y','Fuego XVII',STR_TO_DATE('12/07/2013','%d/%m/%Y'),'Andaluz');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('14','L8512172Y','Fuego XVII',TO_DATE('12/07/2013','DD/MM/YYYY'),'Andaluz');
+values ('15','L8512172Y','Lexinton',STR_TO_DATE('24/02/2013','%d/%m/%Y'),'Tennessee');
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('15','L8512172Y','Lexinton',TO_DATE('24/02/2013','DD/MM/YYYY'),'Tennessee');
-insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
-values ('16','M6428283C','Eclipse',TO_DATE('30/03/2013','DD/MM/YYYY'),'Andaluz');
+values ('16','M6428283C','Eclipse',STR_TO_DATE('30/03/2013','%d/%m/%Y'),'Andaluz');
 
 OK #############################################################
 
 create table caballoscarreras
 (
-CodCaballo		varchar(2),
-Peso			integer,
-Nacionalidad	varchar(10),
+CodCaballo varchar(2),
+Peso integer,
+Nacionalidad varchar(10),
 foreign key (CodCaballo) references caballos (CodCaballo)
 );
 
@@ -442,9 +371,9 @@ OK #############################################################
 
 create table instalaciones
 (
-CodInstal	varchar(2),
-Nombre		varchar(20),
-primary key (CodInstal)
+CodInstal varchar(2),
+Nombre varchar(20),
+constraint pk_inst primary key (CodInstal)
 );
 
 insert into instalaciones (CodInstal, Nombre)
@@ -478,9 +407,9 @@ OK #############################################################
 
 create table cuadras
 (
-CodInstal	varchar(2),
-Aforo		integer,
-Tamano		integer,
+CodInstal varchar(2),
+Aforo integer,
+Tamano integer,
 foreign key (CodInstal) references instalaciones (CodInstal)
 );
 
@@ -505,10 +434,10 @@ OK #############################################################
 
 create table pistas
 (
-CodInstal	varchar(2),
-Superficie	integer,
-Longitud	integer,
-Tipo 		varchar(12),
+CodInstal varchar(2),
+Superficie integer,
+Longitud integer,
+Tipo varchar(12),
 foreign key (CodInstal) references instalaciones (CodInstal),
 constraint ck_tipo check(Tipo IN ('Hierba','Arena Batida','Tierra'))
 );
@@ -526,54 +455,54 @@ OK #############################################################
 
 create table cuadrante
 (
-CodCaballo	varchar(4),
-CodInstal	varchar(4),
-Fecha		date,
-Hora 		time,
+CodCaballo varchar(4),
+CodInstal varchar(4),
+Fecha date,
+Hora time,
 foreign key (CodInstal) references instalaciones (CodInstal),
 foreign key (CodCaballo) references caballos (CodCaballo),
-constraint ck_diaCuad check(to_number(to_char(Fecha,'D'),'9') != 2)
+constraint ck_diaCuad check(weekday(Fecha) != 0)
 );
 
 insert into cuadrante (CodCaballo, CodInstal, Fecha, Hora)
-values ('03','06',TO_DATE('24/03/18','DD/MM/YY'),'11:45');
+values ('03','06',STR_TO_DATE('24/03/18','%d/%m/%Y'),'11:45');
 insert into cuadrante
-values ('04','11',TO_DATE('03/04/18','DD/MM/YY'),'08:30');
+values ('04','11',STR_TO_DATE('03/04/18','%d/%m/%Y'),'08:30');
 insert into cuadrante
-values ('10','09',TO_DATE('12/04/18','DD/MM/YY'),'10:25');
+values ('10','09',STR_TO_DATE('12/04/18','%d/%m/%Y'),'10:25');
 insert into cuadrante
-values ('08','02',TO_DATE('22/04/18','DD/MM/YY'),'16:15');
+values ('08','02',STR_TO_DATE('22/04/18','%d/%m/%Y'),'16:15');
 insert into cuadrante
-values ('01','10',TO_DATE('10/05/18','DD/MM/YY'),'17:00');
+values ('01','10',STR_TO_DATE('10/05/18','%d/%m/%Y'),'17:00');
 insert into cuadrante
-values ('09','01',TO_DATE('15/05/18','DD/MM/YY'),'09:30');
+values ('09','01',STR_TO_DATE('15/05/18','%d/%m/%Y'),'09:30');
 insert into cuadrante
-values ('11','12',TO_DATE('08/05/18','DD/MM/YY'),'10:45');
+values ('11','12',STR_TO_DATE('08/05/18','%d/%m/%Y'),'10:45');
 insert into cuadrante
-values ('13','10',TO_DATE('27/06/18','DD/MM/YY'),'13:55');
+values ('13','10',STR_TO_DATE('27/06/18','%d/%m/%Y'),'13:55');
 insert into cuadrante
-values ('04','04',TO_DATE('14/07/18','DD/MM/YY'),'13:45');
+values ('04','04',STR_TO_DATE('14/07/18','%d/%m/%Y'),'13:45');
 insert into cuadrante
-values ('16','09',TO_DATE('19/07/18','DD/MM/YY'),'12:45');
+values ('16','09',STR_TO_DATE('19/07/18','%d/%m/%Y'),'12:45');
 insert into cuadrante
-values ('06','05',TO_DATE('02/08/18','DD/MM/YY'),'11:00');
+values ('06','05',STR_TO_DATE('02/08/18','%d/%m/%Y'),'11:00');
 insert into cuadrante
-values ('15','03',TO_DATE('09/09/18','DD/MM/YY'),'16:00');
+values ('15','03',STR_TO_DATE('09/09/18','%d/%m/%Y'),'16:00');
 insert into cuadrante
-values ('13','07',TO_DATE('20/10/18','DD/MM/YY'),'18:15');
+values ('13','07',STR_TO_DATE('20/10/18','%d/%m/%Y'),'18:15');
 insert into cuadrante
-values ('05','06',TO_DATE('27/10/18','DD/MM/YY'),'20:30');
+values ('05','06',STR_TO_DATE('27/10/18','%d/%m/%Y'),'20:30');
 insert into cuadrante
-values ('08','10',TO_DATE('12/01/19','DD/MM/YY'),'09:45');
+values ('08','10',STR_TO_DATE('12/01/19','%d/%m/%Y'),'09:45');
 insert into cuadrante
-values ('07','05',TO_DATE('22/01/19','DD/MM/YY'),'10:30');
+values ('07','05',STR_TO_DATE('22/01/19','%d/%m/%Y'),'10:30');
 insert into cuadrante
-values ('15','04',TO_DATE('05/02/19','DD/MM/YY'),'17:05');
+values ('15','04',STR_TO_DATE('05/02/19','%d/%m/%Y'),'17:05');
 insert into cuadrante
-values ('16','02',TO_DATE('10/03/19','DD/MM/YY'),'19:30');
+values ('16','02',STR_TO_DATE('10/03/19','%d/%m/%Y'),'19:30');
 insert into cuadrante
-values ('14','11',TO_DATE('13/03/19','DD/MM/YY'),'18:15');
+values ('14','11',STR_TO_DATE('13/03/19','%d/%m/%Y'),'18:15');
 insert into cuadrante
-values ('13','12',TO_DATE('16/04/19','DD/MM/YY'),'19:00');
+values ('13','12',STR_TO_DATE('16/04/19','%d/%m/%Y'),'19:00');
 insert into cuadrante
-values ('12','10',TO_DATE('26/04/19','DD/MM/YY'),'13:00');
+values ('12','10',STR_TO_DATE('26/04/19','%d/%m/%Y'),'13:00');
