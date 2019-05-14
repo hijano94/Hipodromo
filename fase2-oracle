@@ -1,5 +1,5 @@
-1 ################################################################
-#################### Tabla OK | Restricciones OK | Datos(8) OK
+################################################################
+
 create table jockeys
 (
 DNI   		varchar2(9),
@@ -30,8 +30,8 @@ values ('78914674D', 'Manolo', '1,61', '59', '609516432');
 insert into jockeys 
 values ('89189748F', 'Alonso', '1,64', '56', '651274143');
 
-3 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(30) OK
+###############################################################
+
 create table participaciones
 (
 CodPart			varchar2(2),
@@ -60,12 +60,21 @@ values ('05','02','08','71234522I','34','1');
 insert into participaciones
 values ('06','02','13','77185561E','54','2');
 
+insert into participaciones (CodPart, CodCarrera, CodCaballo, DNI, Dorsal, PosicionFinal)
+values ('40','02','07','77185561E','23','4');
 insert into participaciones
-values ('07','03','11','59249165G','05','1');
+values ('38','02','09','77185561E','83',NULL);
+insert into participaciones
+values ('39','02','11','77185561E','29',NULL);
+
+insert into participaciones
+values ('07','03','09','59249165G','05','1');
 insert into participaciones
 values ('08','03','12','89189748F','01','3');
 insert into participaciones
 values ('09','03','07','28278764O','73','2');
+insert into participaciones
+values ('40','03','11','77185561E','05','4');
 
 insert into participaciones
 values ('10','04','14','78914674D','03','1');
@@ -84,9 +93,11 @@ values ('15','05','08','09823785H','52','3');
 insert into participaciones
 values ('16','06','14','78914674D','04','3');
 insert into participaciones
-values ('17','06','11','99764244W','41','1');
+values ('17','06','08','99764244W','41','1');
 insert into participaciones
 values ('18','06','07','89189748F','21','2');
+insert into participaciones
+values ('41','06','11','99764244W','41','4');
 
 insert into participaciones
 values ('19','07','08','78914674D','61','3');
@@ -130,8 +141,8 @@ values ('35','12','03','11772636E','88','3');
 insert into participaciones
 values ('36','12','10','59249165G','66','2');
 
-1 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(12) OK
+###############################################################
+
 create table carreras
 (
 CodCarrera		varchar2(2),
@@ -241,8 +252,8 @@ values	('12',
 		TO_DATE('01/01/08','DD/MM/YY'),
 		TO_DATE('31/12/13','DD/MM/YY'));
 
-1 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(6) OK
+###############################################################
+
 create table clientes
 (
 DNI			varchar2(9),
@@ -271,62 +282,84 @@ values ('10419214W','Laura','Fernandez','Lopez','C/rosendo','Sevilla','Sevilla',
 insert into clientes
 values ('13059373D','María','Hidalgo','Bilbao','C/desengaño','Osuna','Sevilla','654242339');
 
-4 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(20) OK
+
+###############################################################
+
 create table apuestas
 (
 DNI 		varchar2(9),
 CodPart		varchar2(2),
 Importe 	number(5,2) NOT NULL,
-TantoAUno	varchar2(8) NOT NULL,
+TantoAUno	number(8) NOT NULL,
 foreign key (DNI) references clientes (DNI),
 foreign key (CodPart) references participaciones (CodPart),
 constraint ck_limi check(Importe <= 9000)
 );
 
 insert into apuestas (DNI, CodPart, Importe, TantoAUno)
-values ('89717941U','01','50','2/1');
+values ('89717941U','01','50','2');
 insert into apuestas
-values ('23879284E','10','20','10/1');
+values ('23879284E','10','20','10');
 insert into apuestas
-values ('12391486Y','20','75','5/1');
+values ('12391486Y','20','75','5');
 insert into apuestas
-values ('89717941U','30','100','2/1');
+values ('89717941U','30','100','2');
 insert into apuestas
-values ('23879284E','33','200','7/1');
+values ('23879284E','33','200','7');
 insert into apuestas
-values ('13059373D','07','120','5/1');
+values ('13059373D','07','120','5');
 insert into apuestas
-values ('89717941U','15','50','2/1');
+values ('89717941U','15','50','2');
 insert into apuestas
-values ('23879284E','17','25','7/1');
+values ('23879284E','17','25','7');
 insert into apuestas
-values ('12391486Y','02','30','3/1');
+values ('12391486Y','02','30','3');
 insert into apuestas
-values ('19879836T','31','1000','10/1');
+values ('19879836T','31','1000','10');
 insert into apuestas
-values ('89717941U','27','300','3/1');
+values ('89717941U','27','300','3');
 insert into apuestas
-values ('10419214W','09','30','7/1');
+values ('10419214W','09','30','7');
 insert into apuestas
-values ('13059373D','35','90','3/1');
+values ('13059373D','35','90','3');
 insert into apuestas
-values ('12391486Y','13','40','2/1');
+values ('12391486Y','13','40','2');
 insert into apuestas
-values ('10419214W','27','130','5/1');
+values ('10419214W','27','130','5');
 insert into apuestas
-values ('89717941U','32','250','3/1');
+values ('89717941U','32','250','3');
 insert into apuestas
-values ('23879284E','24','30','3/1');
+values ('23879284E','24','30','3');
 insert into apuestas
-values ('19879836T','05','400','2/1');
+values ('19879836T','05','400','2');
 insert into apuestas
-values ('19879836T','06','80','10/1');
+values ('19879836T','06','80','10');
 insert into apuestas
-values ('23879284E','11','45','5/1');
+values ('23879284E','11','45','5');
 
-1 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(4) OK
+insert into apuestas (DNI, CodPart, Importe, TantoAUno)
+values ('89717941U','26','300','3');
+insert into apuestas
+values ('10419214W','26','30','7');
+insert into apuestas
+values ('13059373D','34','90','3');
+insert into apuestas
+values ('12391486Y','21','40','2');
+insert into apuestas
+values ('10419214W','21','130','5');
+insert into apuestas
+values ('89717941U','34','250','3');
+insert into apuestas
+values ('23879284E','26','30','3');
+insert into apuestas
+values ('19879836T','27','400','2');
+insert into apuestas
+values ('19879836T','35','80','10');
+insert into apuestas
+values ('23879284E','36','45','5');
+
+###############################################################
+
 create table propietarios
 (
 NIF		varchar2(9),
@@ -348,8 +381,11 @@ values ('Y8171984U','200');
 insert into propietarios
 values ('Z3429855T','700');
 
-2 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(10) OK
+insert into propietarios (NIF, Cuota)
+values ('K9239812K','300');
+
+###############################################################
+
 create table caballos
 (
 CodCaballo	varchar(2),
@@ -394,8 +430,8 @@ values ('15','L8512172Y','Lexinton',TO_DATE('24/02/2013','DD/MM/YYYY'),'Tennesse
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
 values ('16','M6428283C','Eclipse',TO_DATE('30/03/2013','DD/MM/YYYY'),'Andaluz');
 
-3 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(10) OK
+###############################################################
+
 create table caballoscarreras
 (
 CodCaballo		varchar2(2),
@@ -425,8 +461,8 @@ values ('13','502','Italia');
 insert into caballoscarreras
 values ('14','488','Francia');
 
-1 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(8) OK
+###############################################################
+
 create table instalaciones
 (
 CodInstal	varchar(2),
@@ -461,8 +497,8 @@ values ('11','El chancla');
 insert into instalaciones (CodInstal, Nombre)
 values ('12','Juan de Regis');
 
-2 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(?) OK
+###############################################################
+
 create table cuadras
 (
 CodInstal	varchar2(2),
@@ -488,8 +524,8 @@ values ('07','30','150');
 insert into cuadras
 values ('08','20','100');
 
-2 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(4) OK
+###############################################################
+
 create table pistas
 (
 CodInstal	varchar2(2),
@@ -509,8 +545,8 @@ values ('11','300','2000','Hierba');
 insert into pistas
 values ('12','500','4000','Tierra');
 
-3 ###############################################################
-#################### Tabla OK | Restricciones OK | Datos(20) OK
+###############################################################
+
 create table cuadrante
 (
 CodCaballo	varchar2(2),
@@ -530,7 +566,7 @@ values ('10','09',TO_DATE('12/04/18 10:25','DD/MM/YY HH24:MI'));
 insert into cuadrante
 values ('08','02',TO_DATE('22/04/18 16:15','DD/MM/YY HH24:MI'));
 insert into cuadrante
-values ('01','10',TO_DATE('10/05/18 17:00','DD/MM/YY HH24:MI'));
+values ('04','10',TO_DATE('10/05/18 17:00','DD/MM/YY HH24:MI'));
 insert into cuadrante
 values ('09','01',TO_DATE('15/05/18 09:30','DD/MM/YY HH24:MI'));
 insert into cuadrante
@@ -542,7 +578,7 @@ values ('04','04',TO_DATE('14/07/18 13:45','DD/MM/YY HH24:MI'));
 insert into cuadrante
 values ('16','09',TO_DATE('19/07/18 12:45','DD/MM/YY HH24:MI'));
 insert into cuadrante
-values ('06','05',TO_DATE('02/08/18 11:00','DD/MM/YY HH24:MI'));
+values ('04','05',TO_DATE('02/08/18 11:00','DD/MM/YY HH24:MI'));
 insert into cuadrante
 values ('15','03',TO_DATE('09/09/18 16:00','DD/MM/YY HH24:MI'));
 insert into cuadrante

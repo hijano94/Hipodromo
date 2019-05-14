@@ -1,0 +1,184 @@
+1. El jockey de menor estatura va a participar en la última carrera de la temporada con el caballo que más veces utilizó las instalaciones del hipódromo en el año 2018. Su dorsal será el 23 y todavía no sabemos en que posición acabará. Inserta el registro correspondiente.
+
+CREATE OR REPLACE VIEW USOS AS 
+SELECT CodCaballo, count(CodCaballo) as veces
+from cuadrante 
+where TO_CHAR(Fecha, 'YY')= '18'
+group by CodCaballo;
+
+INSERT into participaciones (CodPart,CodCarrera,CodCaballo,DNI,Dorsal,PosicionFinal)
+VALUES(
+		(SELECT to_number(max(CodPart),'99') + 1 from Participaciones),
+		(SELECT CodCarrera from carreras where Fecha = (SELECT max(Fecha) from carreras)),
+		(SELECT CodCaballo from usos where veces= (select max(veces) from usos)),
+		(SELECT DNI from jockeys where Altura = (SELECT min(Altura) from jockeys)),
+		'23', 
+		NULL);
+
+
+2. El caballo más joven del propietario que ha ganado más carreras entre todos sus caballos ha engordado siete kilos. Registra el cambio en la base de datos. 
+
+CREATE VIEW vcaballos AS 
+SELECT c.NIF, count(c.CodCaballo) as victorias
+from caballos c, participaciones p
+where c.CodCaballo=p.CodCaballo
+and p.PosicionFinal = 1
+group by NIF;
+
+UPDATE caballoscarreras
+SET peso = peso + 7
+WHERE caballoscarreras.CodCaballo =(
+select CodCaballo
+from caballos
+where nif=(select NIF 
+		from vcaballos
+		where victorias = (select Max(victorias) from vcaballos))
+		and FechaNac =(select Max(FechaNac)
+						from caballos
+						where NIF= (select NIF 
+									from vcaballos
+									where victorias= (select Max(victorias)
+													from vcaballos)))
+										)
+
+
+3. Muestra el importe total de las apuestas de cada uno de los caballos que participaron en la primera carrera de la temporada 2018.
+
+Select p.CodCaballo, SUM(a.importe)
+from participaciones p
+FULL OUTER JOIN apuestas a
+ON p.CodPart=a.CodPart
+where p.CodPart IN (Select CodPart
+						from participaciones
+						where CodCarrera= 
+						(select CodCarrera
+						from carreras
+						where Fecha = ( select MIN (Fecha)
+											from carreras
+									where to_char(Fecha,'YY') = '18')))
+group by p.CodCaballo;
+
+
+4. Muestra los datos del cliente que ha ganado más dinero con las apuestas en los tres últimos meses. 
+
+CREATE OR REPLACE VIEW gananciasCliente as
+Select a.DNI, SUM(a.importe * a.TantoAUno) as importe
+from apuestas a, participaciones p
+where a.CodPart = p.CodPart
+and p.PosicionFinal = 1
+and p.CodCarrera IN (select CodCarrera
+					from carreras
+					where to_char(Fecha,'MMDD') BETWEEN to_char(current_date - interval '3 month','MMDD') and to_char(current_date,'MMDD'))
+group by a.DNI;
+
+select c.*
+from clientes c, gananciasCliente g
+where g.importe = (select MAX(importe) from gananciasCliente)
+and g.DNI = c.DNI;
+
+
+5. Muestra los propietarios de caballos que hayan ocupado todas y cada una de las tres posiciones del podio en las diferentes carreras en las que hayan participado.
+
+select NIF
+from caballos
+where CodCaballo IN (select CodCaballo
+from participaciones
+where 1 IN (PosicionFinal) 
+and CodCaballo IN (select CodCaballo
+					from participaciones
+					where 2 IN (PosicionFinal)
+					and CodCaballo IN (select CodCaballo
+									from participaciones
+									where 3 IN (PosicionFinal) 
+									group by CodCaballo) 
+					group by CodCaballo)
+group by CodCaballo)
+Group by NIF;
+
+
+6. Muestra el número de abandonos de cada uno de los caballos, incluyendo aquéllos que no hayan sufrido ningún abandono. 
+
+Select c.CodCaballo, count(p.CodCaballo)
+from participaciones p
+FULL OUTER JOIN caballos c
+ON c.CodCaballo=p.CodCaballo
+where p.PosicionFinal IS NULL
+group by c.CodCaballo
+;
+
+
+7. Muestra para cada carrera el caballo más joven que ha participado en la misma.
+
+create view NacCarreras AS
+select p.CodCarrera, MAX(c.FechaNac) as fecha
+from participaciones p, caballos c
+where p.CodCaballo = c.CodCaballo
+group by p.CodCarrera
+
+select p.CodCarrera, p.CodCaballo
+from participaciones p, caballos c, NacCarreras n
+where p.CodCaballo = c.CodCaballo
+and p.CodCarrera = n.CodCarrera
+and c.FechaNac = n.fecha
+group by p.CodCarrera, p.CodCaballo
+order by p.CodCarrera
+
+
+8. Muestra el último caballo que ganó una carrera de cada uno de los propietarios.
+
+create view fechaCod as
+select p.CodCaballo, MAX(c.Fecha) as fecha
+from participaciones p, carreras c
+where p.CodCarrera = c.CodCarrera 
+and p.PosicionFinal = 1
+group by p.CodCaballo
+
+create view fechaNIF as
+select c.NIF, max(f.fecha) as fecha
+from caballos c, fechaCod f
+where c.CodCaballo = f.CodCaballo
+group by c.NIF
+
+select n.NIF, c.CodCaballo
+from fechaCod c, fechaNIF n
+where c.fecha = n.fecha
+
+
+9. Muestra los propietarios que nunca han tenido uno de sus caballos en el podio. 
+
+CREATE OR REPLACE VIEW nopodios AS
+select c.NIF
+from caballos c, participaciones p
+where c.CodCaballo = p.CodCaballo
+and p.PosicionFinal NOT IN (1,2,3)
+group by c.NIF
+
+CREATE OR REPLACE VIEW podios AS
+select c.NIF
+from caballos c, participaciones p
+where c.CodCaballo = p.CodCaballo
+and p.PosicionFinal IN (1,2,3)
+group by c.NIF
+
+select NIF
+from nopodios 
+where NIF NOT IN (select * from podios)
+
+
+10. Crea una vista en la que aparezca la carrera que ha hecho ganar más dinero a cada uno de los clientes, junto con el importe de los beneficios obtenidos. 
+
+CREATE OR REPLACE VIEW ApGanadas AS
+select a.DNI, p.CodCarrera, (a.importe * a.TantoAUno) as premio
+from apuestas a, participaciones p
+where a.CodPart = p.CodPart
+and p.PosicionFinal = 1
+
+CREATE OR REPLACE VIEW MaxPremios AS
+select DNI, MAX(premio) as premio
+from ApGanadas
+group by DNI;
+
+select g.DNI, g.CodCarrera, g.premio
+from ApGanadas g, MaxPremios m
+where g.DNI=m.DNI
+and g.premio = m.premio

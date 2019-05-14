@@ -1,4 +1,4 @@
-OK ##############################################################
+##############################################################
 
 create table jockeys
 (
@@ -30,7 +30,7 @@ values ('78914674D', 'Manolo', '1.61', '59.4', '609516432');
 insert into jockeys 
 values ('89189748F', 'Alonso', '1.64', '56.6', '651274143');
 
-OK #############################################################
+#############################################################
 
 create table participaciones
 (
@@ -59,6 +59,10 @@ insert into participaciones
 values ('05','02','08','71234522I','34','1');
 insert into participaciones
 values ('06','02','13','77185561E','54','2');
+insert into participaciones (CodPart, CodCarrera, CodCaballo, DNI, Dorsal, PosicionFinal)
+values ('38','02','09','77185561E','83',NULL);
+insert into participaciones
+values ('39','02','11','77185561E','29',NULL);
 
 insert into participaciones
 values ('07','03','11','59249165G','05','1');
@@ -87,6 +91,7 @@ insert into participaciones
 values ('17','06','11','99764244W','41','1');
 insert into participaciones
 values ('18','06','07','89189748F','21','2');
+
 
 insert into participaciones
 values ('19','07','08','78914674D','61','3');
@@ -130,7 +135,7 @@ values ('35','12','03','11772636E','88','3');
 insert into participaciones
 values ('36','12','10','59249165G','66','2');
 
-OK #############################################################
+#############################################################
 
 create table carreras
 (
@@ -184,7 +189,7 @@ insert into carreras
 values	('12', STR_TO_DATE('10/02/19','%d/%m/%Y'),'13:10','5000', '25',STR_TO_DATE('01/01/08','%d/%m/%Y'),STR_TO_DATE('31/12/13','%d/%m/%Y'));
 
 
-OK #############################################################
+#############################################################
 
 create table clientes
 (
@@ -213,14 +218,14 @@ values ('10419214W','Laura','Fernandez','Lopez','C/rosendo','Sevilla','Sevilla',
 insert into clientes
 values ('13059373D','María','Hidalgo','Bilbao','C/desengaño','Osuna','Sevilla','654242339');
 
-OK #############################################################
+#############################################################
 
 create table apuestas
 (
 DNI varchar(9),
 CodPart varchar(2),
 Importe integer NOT NULL,
-TantoAUno varchar(8) NOT NULL,
+TantoAUno integer NOT NULL,
 foreign key (DNI) references clientes (DNI),
 foreign key (CodPart) references participaciones (CodPart),
 constraint ck_limi check(Importe <= 9000)
@@ -267,7 +272,7 @@ values ('19879836T','06','80','10/1');
 insert into apuestas
 values ('23879284E','11','45','5/1');
 
-OK #############################################################
+#############################################################
 
 create table propietarios
 (
@@ -290,7 +295,7 @@ values ('Y8171984U','200');
 insert into propietarios
 values ('Z3429855T','700');
 
-OK #############################################################
+#############################################################
 
 create table caballos
 (
@@ -336,7 +341,7 @@ values ('15','L8512172Y','Lexinton',STR_TO_DATE('24/02/2013','%d/%m/%Y'),'Tennes
 insert into caballos (CodCaballo, NIF, Nombre, FechaNac, Raza)
 values ('16','M6428283C','Eclipse',STR_TO_DATE('30/03/2013','%d/%m/%Y'),'Andaluz');
 
-OK #############################################################
+#############################################################
 
 create table caballoscarreras
 (
@@ -367,7 +372,7 @@ values ('13','502','Italia');
 insert into caballoscarreras
 values ('14','488','Francia');
 
-OK #############################################################
+#############################################################
 
 create table instalaciones
 (
@@ -403,7 +408,7 @@ values ('11','El chancla');
 insert into instalaciones (CodInstal, Nombre)
 values ('12','Juan de Regis');
 
-OK #############################################################
+#############################################################
 
 create table cuadras
 (
@@ -430,7 +435,7 @@ values ('07','30','150');
 insert into cuadras
 values ('08','20','100');
 
-OK #############################################################
+#############################################################
 
 create table pistas
 (
@@ -451,7 +456,7 @@ values ('11','300','2000','Hierba');
 insert into pistas
 values ('12','500','4000','Tierra');
 
-OK #############################################################
+#############################################################
 
 create table cuadrante
 (
@@ -506,3 +511,7 @@ insert into cuadrante
 values ('13','12',STR_TO_DATE('16/04/19','%d/%m/%Y'),'19:00');
 insert into cuadrante
 values ('12','10',STR_TO_DATE('26/04/19','%d/%m/%Y'),'13:00');
+insert into cuadrante (CodCaballo, CodInstal, Fecha, Hora)
+values ('04','06',STR_TO_DATE('24/07/18','%d/%m/%Y'),'11:45');
+insert into cuadrante (CodCaballo, CodInstal, Fecha, Hora)
+values ('04','10',STR_TO_DATE('26/07/18','%d/%m/%Y'),'11:45');
