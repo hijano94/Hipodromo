@@ -1,0 +1,594 @@
+1. Realiza una función que reciba como parámetros un código de carrera y un código de caballo y devuelva el importe total que tendrá que pagar el hipódromo a los apostantes suponiendo que dicha carrera sea ganada por el caballo recibido como parámetro. Se deben contemplar las siguientes excepciones: Carrera inexistente, Caballo inexistente, Caballo no participante en esa carrera.
+
+CREATE OR REPLACE FUNCTION ExisteCarr(p_CodCarrera carreras.CodCarrera%type)
+RETURN NUMBER
+IS
+	v_carr NUMBER;
+BEGIN
+	select count(*) into v_carr 
+	from carreras
+	where CodCarrera=p_CodCarrera;
+
+	IF  v_carr = 0 THEN
+		RAISE_APPLICATION_ERROR(-20001,'No existe carrera con ese código');
+	ELSE
+		RETURN 1;
+	END IF;
+END;
+
+CREATE OR REPLACE FUNCTION ExisteCab(p_CodCaballo caballos.CodCaballo%type)
+RETURN NUMBER
+IS
+	v_cab NUMBER;
+BEGIN
+	select count(*) into v_cab
+	from caballos 
+	where CodCaballo= p_CodCaballo;
+
+	IF  v_cab = 0 THEN
+		RAISE_APPLICATION_ERROR(-20002,'No existe caballo con ese código');
+	ELSE
+		RETURN 1;
+	END IF;
+END;
+
+CREATE OR REPLACE FUNCTION ExistePart(p_CodCarrera carreras.CodCarrera%type, p_CodCaballo caballos.CodCaballo%type)
+RETURN NUMBER
+IS
+	v_part NUMBER;
+BEGIN
+	IF ExisteCarr(p_CodCarrera) = 1 AND ExisteCab(p_CodCaballo) = 1 THEN
+		select count(*) into v_part 
+		from participaciones 
+		where CodCarrera= p_CodCarrera and CodCaballo= p_CodCaballo;
+		
+		IF v_part = 0 THEN
+			RAISE_APPLICATION_ERROR(-20003,'No existen participaciones con ese código');
+		ELSE
+			RETURN 1;
+		END IF;
+	END IF;
+END;
+
+
+CREATE OR REPLACE FUNCTION CalcularPerdidas (p_CodCarrera carreras.CodCarrera%type, p_CodCaballo caballos.CodCaballo%type)
+RETURN NUMBER
+IS
+	v_total NUMBER;
+	v_num NUMBER;
+
+	CURSOR c_WinPart is
+	select CodPart
+	from participaciones
+	where CodCarrera = p_CodCarrera
+	and CodCaballo = p_CodCaballo;
+BEGIN
+	IF ExistePart(p_CodCarrera,p_CodCaballo) = 1 THEN
+		for v_CodPart in c_WinPart loop
+			select SUM(importe * TantoAUno) into v_num
+			from apuestas
+			where CodPart= v_CodPart.CodPart;
+
+			v_total:= v_total + v_num;
+		end loop;
+		RETURN v_total;
+	END IF;
+END;
+
+CREATE OR REPLACE PROCEDURE ejercicio1 (p_CodCarrera carreras.CodCarrera%type, p_CodCaballo caballos.CodCaballo%type)
+IS
+BEGIN
+	dbms_output.put_line('Perdidas: '|| CalcularPerdidas(p_CodCarrera,p_CodCaballo));
+END;
+
+
+
+2. Realizar un procedimiento llamado MostrarInformes que recibirá tres parámetros. El primero determinará el tipo de informe que queremos obtener y los otros dos dependerán del tipo de informe.
+
+
+CREATE OR REPLACE PROCEDURE MostrarClasificacion(p_Cod carreras.Codcarrera%type)
+IS
+	CURSOR c_part is
+	select *
+	from participaciones
+	where CodCarrera = p_Cod
+	order by PosicionFinal;
+
+	v_NomCab 	caballos.Nombre%type;
+	v_NomJok	jockeys.Nombre%type;
+BEGIN
+	dbms_output.put_line('Clasificación:');
+	for v_part in c_part loop
+		select Nombre into v_NomCab 
+		from caballos 
+		where CodCaballo = v_part.CodCaballo;
+
+		select Nombre into v_NomJok 
+		from jockeys 
+		where DNI = v_part.DNI;
+
+		dbms_output.put_line(v_part.PosicionFinal || '    ' || v_NomCab || '    ' || v_NomJok);
+	end loop;
+END;
+
+CREATE OR REPLACE PROCEDURE Informe1 (p_Fecha VARCHAR2)
+IS
+	CURSOR c_carr is
+	select *
+	from carreras
+	where TO_CHAR(FechaHora, 'DD/MM/YY') = p_Fecha;
+
+	v_Fecha date;
+BEGIN
+	v_Fecha := TO_DATE(p_Fecha, 'DD/MM/YY');
+	dbms_output.put_line('Fecha: '|| to_char (v_Fecha,'DD') || ' de ' || to_char(v_Fecha,'MONTH') || ' de ' || to_char (v_Fecha,'YYYY'));
+
+	for v_carr in c_carr loop
+		dbms_output.put_line('Hora: ' || to_char(v_carr.FechaHora, 'HH:MI') ||'            '|| 'Importe Premio: '|| v_carr.ImportePremio);
+		MostrarClasificacion(v_carr.CodCarrera);
+	end loop;
+END;
+
+CREATE OR REPLACE PROCEDURE Informe2 (p_CodCarrera carreras.CodCarrera%type)
+IS
+	CURSOR c_carrera is
+	select *
+	from carreras
+	where CodCarrera = p_CodCarrera;
+BEGIN
+	for race in c_carrera loop
+		dbms_output.put_line('Código Carrera: '|| p_CodCarrera);
+		dbms_output.put_line('Fecha: '|| to_char(race.FechaHora,'DD') || ' de ' || to_char(race.FechaHora,'MONTH') || ' de ' || to_char(race.FechaHora,'YYYY'));
+		dbms_output.put_line('Hora: '|| to_char(race.FechaHora, 'HH:MI'));
+		dbms_output.put_line('Importe Premio: '|| race.ImportePremio || '        '|| 'Límite Apuesta: '|| race.LimiteApuesta);
+		dbms_output.put_line('Caballos nacidos de '|| to_char(race.FechaNacMin,'DD/MM/YYYY') || ' a '|| to_char(race.FechaNacMax,'DD/MM/YYYY'));
+		MostrarClasificacion(p_CodCarrera);
+	end loop;
+END;
+
+CREATE OR REPLACE FUNCTION NombreCaballo(p_CodCaballo caballos.CodCaballo%type)
+RETURN VARCHAR2
+IS
+	v_mess VARCHAR2(60);
+BEGIN
+	SELECT CONCAT('Caballo: ',Nombre) into v_mess
+	from caballos
+	where CodCaballo = p_CodCaballo;
+	RETURN v_mess;
+END;
+
+CREATE OR REPLACE FUNCTION NombreJockey(p_DNI jockeys.DNI%type)
+RETURN VARCHAR2
+IS
+	v_mess VARCHAR2(60);
+BEGIN
+	SELECT CONCAT('Jockey: ',Nombre) into v_mess
+	from jockeys
+	where DNI = p_DNI;
+	RETURN v_mess;
+END;
+
+CREATE OR REPLACE FUNCTION Tantoporuno(p_CodPart participaciones.CodPart%type)
+RETURN VARCHAR2
+IS
+	v_mess VARCHAR2(60);
+BEGIN
+	SELECT CONCAT('Tanto por Uno: ',TantoAUno) into v_mess
+	from apuestas
+	where CodPart= p_CodPart;
+	RETURN v_mess;
+EXCEPTION
+	WHEN NO_DATA_FOUND THEN
+		Return 'Tanto por Uno: NONE';
+END;
+
+CREATE OR REPLACE FUNCTION NumVictorias(p_CodCaballo caballos.CodCaballo%type)
+RETURN VARCHAR2
+IS
+	v_mess VARCHAR2(60);
+BEGIN
+	SELECT CONCAT('Numero de Victorias: ',Count(*)) into v_mess
+	from participaciones
+	where CodCaballo = p_CodCaballo
+	AND PosicionFinal = 1;
+	RETURN v_mess;
+END;
+
+CREATE OR REPLACE FUNCTION UltimaParticipacion(p_CodCaballo caballos.CodCaballo%type)
+RETURN VARCHAR2
+IS
+	v_mess 	VARCHAR2(60);
+	v_fecha date;
+BEGIN
+	select MAX(c.FechaHora) into v_fecha
+	from participaciones p, carreras c
+	where p.CodCaballo = p_CodCaballo
+	AND p.CodCarrera = c.CodCarrera;
+
+	v_mess := CONCAT('Ultima Participacion: ',TO_CHAR(v_fecha,'DD/MM/YY'));
+	RETURN v_mess;
+END;
+
+CREATE OR REPLACE FUNCTION UltimaPosicion(p_CodCaballo caballos.CodCaballo%type)
+RETURN VARCHAR2
+IS
+	v_mess 	VARCHAR2(60);
+	v_fecha date;
+BEGIN
+	select MAX(c.FechaHora) into v_fecha
+	from participaciones p, carreras c
+	where p.CodCaballo = p_CodCaballo
+	AND p.CodCarrera = c.CodCarrera;
+
+	SELECT CONCAT('Posicion: ',p.PosicionFinal) into v_mess
+	from participaciones p, carreras c
+	where p.CodCaballo = p_CodCaballo
+	AND c.FechaHora = v_fecha
+	AND c.CodCarrera = p.CodCarrera;
+	RETURN v_mess;
+END;
+
+CREATE OR REPLACE PROCEDURE Informe3 (p_CodCarrera carreras.CodCarrera%type)
+IS
+	v_Fecha date;
+	v_Limite carreras.LimiteApuesta%type;
+
+	CURSOR c_part is
+	select *
+	from participaciones
+	where CodCarrera = p_CodCarrera;
+
+BEGIN
+	select FechaHora, LimiteApuesta into v_Fecha, v_Limite
+	from carreras
+	where CodCarrera = p_CodCarrera;
+
+	dbms_output.put_line ('################');
+	dbms_output.put_line('Código Carrera: '|| p_CodCarrera);
+	dbms_output.put_line('Fecha: '|| to_char(v_Fecha,'DD') || ' de ' || to_char(v_Fecha,'MONTH') || ' de ' || to_char(v_Fecha,'YYYY'));
+	dbms_output.put_line('Hora: '|| to_char(v_Fecha, 'HH:MI') || '    '|| 'Limite apuesta: '|| v_Limite);
+	
+	dbms_output.put_line ('################');
+	dbms_output.put_line('>> Caballos Participantes: ');
+	FOR part in c_part loop
+		dbms_output.put_line('-----------------------');
+		dbms_output.put_line('.... '||NombreCaballo(part.CodCaballo));
+		dbms_output.put_line('.... '||NombreJockey(part.DNI));
+		dbms_output.put_line('.... '||Tantoporuno(part.CodPart)); 
+		dbms_output.put_line('.... '||NumVictorias(part.CodCaballo));
+		dbms_output.put_line('.... '||UltimaParticipacion(part.CodCaballo));
+		dbms_output.put_line('.... '||UltimaPosicion(part.CodCaballo));
+	END loop;
+END;
+
+CREATE OR REPLACE PROCEDURE MostrarInforme (p_Tipo NUMBER, p_Fecha VARCHAR2, p_CodCarrera carreras.CodCarrera%type)
+IS
+BEGIN
+	CASE
+		WHEN p_Tipo = 1 AND p_Fecha IS NOT NULL THEN
+			Informe1(p_Fecha);
+		WHEN p_Tipo = 2 AND p_CodCarrera IS NOT NULL THEN
+			Informe2(p_CodCarrera);
+		WHEN p_Tipo = 3 AND p_CodCarrera IS NOT NULL THEN
+			Informe3(p_CodCarrera);
+	END CASE;
+END;
+
+exec MostrarInforme(1,'18/11/18',NULL);
+exec MostrarInforme(2,NULL,'08');
+exec MostrarInforme(3,NULL,'10');
+
+3. Realiza un trigger que controle que solo participan en una carrera caballos en el rango de edades permitido. Si es necesario, cambia el modelo de datos.
+
+CREATE OR REPLACE TRIGGER ejercicio3
+BEFORE INSERT OR UPDATE ON participaciones
+FOR EACH ROW
+DECLARE
+	v_FechaMin	date;
+	v_FechaMax	date;
+	v_FechaCab	date;
+BEGIN
+	select FechaNacMin, FechaNacMax into v_FechaMin, v_FechaMax
+	from carreras
+	where CodCarrera= :new.CodCarrera;
+
+	select FechaNac into v_FechaCab
+	from caballos
+	where v_FechaCab = :new.CodCaballo;
+
+	IF v_FechaCab NOT BETWEEN FechaMin AND FechaMax THEN
+		raise_application_error(-20004,"Caballo fuera del rango de edad");
+	END IF;
+END;
+
+4. Añade una columna email en la tabla Clientes y rellénala con datos consistentes. Realiza un trigger que cuando se actualice la tabla Participaciones para introducir los resultados de la carrera envíe un correo electrónico a todos los apostantes del caballo ganador informándoles del importe apostado y el beneficio obtenido.
+
+ALTER TABLE clientes
+ADD Email VARCHAR2(40);
+
+CREATE OR REPLACE FUNCTION RellenarMensaje(p_DNI clientes.DNI%type, p_CodCarrera participaciones.CodCarrera%type,p_CodCaballo participaciones.CodCaballo%type, p_Importe apuestas.Importe%type, p_TantoAUno apuestas.TantoAUno%type)
+RETURN VARCHAR2
+IS
+	v_nombre 	VARCHAR2(60);
+	v_caballo 	VARCHAR2(60);
+	v_fecha 	VARCHAR2(60);
+	v_importe 	VARCHAR2(60);
+	v_premio 	VARCHAR2(60);
+	v_msg 		VARCHAR2(60);
+	v_res 		NUMBER;
+BEGIN
+	SELECT CONCAT('Estimad@ ',Nombre) into v_nombre
+				from clientes 
+				where DNI = p_DNI;
+	SELECT CONCAT(' felicidades! su apuesta sobre el caballo ', Nombre) into v_caballo
+	from caballos
+	where CodCaballo = p_CodCaballo;
+	SELECT CONCAT(' caballo en la carrera del dia ', TO_CHAR(FechaHora,'DD/MM/YY')) into v_fecha
+	from carreras
+	where CodCarrera = p_CodCarrera;
+	v_importe := CONCAT('Importe Apostado: ', p_Importe);
+	v_res := p_Importe * p_TantoAUno;
+	v_premio := CONCAT('Premio: ',v_res);
+	v_msg := CONCAT(v_nombre,v_caballo);
+	v_msg := CONCAT(v_fecha,v_importe);
+	v_msg := CONCAT(v_msg,v_premio);
+	RETURN v_msg;
+END;
+
+CREATE OR REPLACE TRIGGER MailGanadores
+BEFORE INSERT OR UPDATE ON participaciones
+FOR EACH ROW
+DECLARE
+	v_msg 	VARCHAR2;
+	v_email VARCHAR2;
+
+BEGIN
+	IF :new.PosicionFinal = 1 THEN
+		CURSOR c_apuestas IS
+		select *
+		from apuestas
+		where CodPart = :new.CodPart;
+
+		EXECUTE IMMEDIATE 'ALTER SESSION SET smtp_out_server= "127.0.0.1"';
+
+		FOR apuestas in c_apuestas loop
+			
+			select email into v_email 
+			from clientes 
+			where DNI= apuestas.DNI)
+			
+			v_msg := RellenarMensaje(apuestas.DNI, :new.CodCarrera, :new.CodCaballo, apuestas.Importe, apuestas.TantoAUno)
+
+			UTL_MAIL.send
+			(
+				sender => 'info@hipodromo.com',
+				recipients => v_email,
+				subject => 'Apuesta Ganadora',
+				message => v_msg,
+				mime_type => 'text; charset=us-ascii'
+			);
+		END loop;
+	END IF;
+END;
+
+5. Añade una columna a la tabla Propietarios llamada ImporteTotalPremios. Rellénala con un procedimiento o una sentencia SQL considerando los premios que han conseguido los caballos de cada uno de ellos por sus victorias en las carreras. Haz un trigger que la mantenga actualizada cada vez que se realice cualquier cambio en la tabla Participaciones que afecte a este total.
+
+ALTER TABLE propietarios
+ADD ImporteTotalPremios NUMBER(20) default 0;
+
+CREATE OR REPLACE PROCEDURE RellenarPremios
+IS
+	CURSOR c_ganadores IS
+	select h.NIF, r.ImportePremio
+	from participaciones p, carreras r, caballos h
+	where r.CodCarrera = p.CodCarrera
+	AND h.CodCaballo = p.CodCaballo
+	AND p.PosicionFinal = 1;
+BEGIN
+	FOR win in c_ganadores loop
+		update propietarios
+		set ImporteTotalPremios = ImporteTotalPremios + win.ImportePremio
+		where NIF = win.NIF;
+	end loop;
+END;
+
+CREATE OR REPLACE TRIGGER PremiosPropietarios
+BEFORE INSERT OR UPDATE ON participaciones
+FOR EACH ROW
+DECLARE
+	v_Premio 	carreras.ImportePremio%type;
+	v_NIF		caballos.NIF%type;
+BEGIN
+	IF :new.PosicionFinal = 1 THEN
+		select ImportePremio into v_Premio
+		from carreras
+		where CodCarrera = :new.CodCarrera;
+
+		select NIF into v_NIF
+		from caballos
+		where CodCaballo = :new.CodCaballo;
+
+		update propietarios
+		set ImporteTotalPremios = ImporteTotalPremios + v_Premio
+		where NIF = v_NIF;
+	END IF;
+END;
+
+6. Realiza los módulos de programación necesarios para evitar que un mismo propietario envíe dos caballos a una misma carrera.
+
+CREATE OR REPLACE PACKAGE PkgCtrlPart
+as
+	TYPE tRegContadores IS RECORD 
+	(
+		CodCarrera 		carreras.CodCarrera%type,
+		NIF 			propietarios.NIF%type
+	);
+
+	TYPE tTablaContadores IS table of tRegContadores
+	INDEX BY BINARY_INTEGER;
+
+	vTabla tTablaContadores;
+end;
+
+CREATE OR REPLACE FUNCTION NumDeCaballos(p_CodCarrera carreras.CodCarrera%type, p_CodCaballo caballos.CodCaballo%type)
+RETURN NUMBER
+IS
+	v_num NUMBER;
+	v_NIF 	propietarios.NIF%type;
+BEGIN
+	select NIF into v_NIF
+	from caballos
+	where CodCaballo = p_CodCaballo;
+	
+	IF PkgCtrlPart.vTabla.COUNT > 0 THEN
+		FOR i IN PkgCtrlPart.vTabla.FIRST..PkgCtrlPart.vTabla.LAST loop
+			IF PkgCtrlPart.vTabla(i).CodCarrera = p_CodCarrera AND PkgCtrlPart.vTabla(i).NIF = v_NIF THEN
+				raise_application_error(-20010, 'No se puede inscribir a más de dos caballos en la misma carrera.');
+			END IF;
+		END LOOP;
+	END IF;
+	return 0;
+END;
+
+CREATE OR REPLACE PROCEDURE SumarCaballo(p_CodCarrera carreras.CodCarrera%type, p_CodCaballo caballos.CodCaballo%type)
+IS
+	v_NIF propietarios.NIF%type;
+	Indice NUMBER;
+BEGIN
+	select NIF into v_NIF
+	from caballos
+	where CodCaballo = p_CodCaballo;
+
+	IF PkgCtrlPart.vTabla.COUNT = 0 THEN
+		Indice := 0;
+	ELSE
+		Indice := PkgCtrlPart.vTabla.LAST + 1;
+	END if;
+
+	PkgCtrlPart.vTabla(Indice).CodCarrera := p_CodCarrera;
+	PkgCtrlPart.vTabla(Indice).NIF := v_NIF;
+END;
+
+CREATE OR REPLACE PROCEDURE RellenarCtrlPart
+IS
+	CURSOR c_part IS
+	select CodCarrera, CodCaballo
+	from participaciones;
+BEGIN
+	FOR part in c_part loop
+		IF NumDeCaballos(part.CodCarrera, part.CodCaballo) = 0 THEN
+			SumarCaballo(part.CodCarrera, part.CodCaballo);
+		ELSE
+			RAISE_APPLICATION_ERROR(-20140,'No se puede inscribir más de un caballo');
+		END IF;
+	END loop;
+END;
+
+CREATE OR REPLACE TRIGGER MaxCaballos
+before insert or update on participaciones
+for each row
+declare
+BEGIN
+	IF NumDeCaballos(:new.CodCarrera, :new.CodCaballo) = 0 THEN
+		SumarCaballo(:new.CodCarrera,:new.CodCaballo);
+	ELSE
+		RAISE_APPLICATION_ERROR(-20150,'No se puede inscribir más de un caballo');
+	END IF;
+END;
+
+
+
+7. Realiza los módulos de programación necesarios para evitar que un mismo jockey corra más de tres carreras en el mismo día.
+### Tengo problemas al rellenar el paquete, como no existe ningun dato inicial la funcion ExisteReg da error ####
+
+CREATE OR REPLACE PACKAGE PkgJockey 
+AS
+	TYPE tRegJockeys IS RECORD
+	(
+		DNI 		varchar2(9),
+		Fecha 		date,
+		Carreras 	NUMBER
+	);
+	TYPE tTablaJockeys IS table of tRegJockeys 
+	INDEX BY BINARY_INTEGER;
+	vJockeys tTablaJockeys;
+END;
+
+CREATE OR REPLACE FUNCTION ExisteReg (p_DNI jockeys.DNI%type, p_Fecha date)
+RETURN NUMBER
+IS
+BEGIN
+	IF PkgJockey.vJockeys.COUNT > 0 THEN
+		FOR i in PkgJockey.vJockeys.FIRST..PkgJockey.vJockeys.LAST loop
+			IF PkgJockey.vJockeys(i).DNI = p_DNI AND TO_CHAR(PkgJockey.vJockeys(i).Fecha, 'DDMMYY') = TO_CHAR(p_Fecha, 'DDMMYY') THEN
+				return PkgJockey.vJockeys(i).Carreras;
+			END if;
+		END loop;
+	END if;
+	return 0;
+END;
+
+CREATE OR REPLACE PROCEDURE InsertarJockey(p_DNI jockeys.DNI%type, p_Fecha date)
+IS
+	Indice NUMBER;
+BEGIN
+	IF PkgJockey.vJockeys.COUNT = 0 THEN
+		Indice := 0;
+	ELSE
+		Indice := PkgJockey.vJockeys.LAST + 1;
+	END if;
+
+	IF ExisteReg(p_DNI, p_Fecha) = 0 THEN
+		PkgJockey.vJockeys(Indice).DNI := p_DNI;
+		PkgJockey.vJockeys(Indice).Fecha := p_Fecha;
+		PkgJockey.vJockeys(Indice).Carreras := 1;
+	ELSE
+		FOR i in PkgJockey.vJockeys.FIRST..PkgJockey.vJockeys.LAST loop
+			IF PkgJockey.vJockeys(i).DNI = p_DNI AND TO_CHAR(PkgJockey.vJockeys(i).Fecha, 'DDMMYY') = TO_CHAR(p_Fecha, 'DDMMYY') THEN
+				PkgJockey.vJockeys(i).Carreras := PkgJockey.vJockeys(i).Carreras + 1;
+			END if;
+		END loop;
+	END IF;
+END;
+
+CREATE OR REPLACE PROCEDURE RellenarCtrlJockeys
+IS
+	CURSOR c_part IS
+	select p.DNI, c.FechaHora
+	from participaciones p, carreras c
+	where p.CodCarrera = c.CodCarrera;
+BEGIN
+	FOR part in c_part loop
+		IF ExisteReg(part.DNI, part.FechaHora) < 3 THEN
+			InsertarJockey(part.DNI,part.FechaHora);
+		ELSE 
+			raise_application_error(-20200, 'No se puede inscribir un jockey en más de tres carreras el mismo día.');
+		END IF;
+	END loop;
+END;
+
+CREATE OR REPLACE TRIGGER JockeysCtrl
+before insert or update on participaciones
+for each row
+declare
+	v_Fecha date;
+BEGIN
+
+	FOR i in PkgJockey.vJockeys.FIRST..PkgJockey.vJockeys.LAST loop
+
+		select FechaHora into v_Fecha
+		from carreras
+		where CodCarrera = :new.CodCarrera;
+
+		IF ExisteReg(:new.DNI,v_Fecha) < 3 THEN
+			InsertarJockey(:new.DNI,v_Fecha);
+		ELSE 
+			raise_application_error(-20100, 'No se puede inscribir un jockey en más de tres carreras el mismo día.');			
+		END IF;
+	END loop;
+END;
+
+8. Realiza los módulos de programación necesarios para evitar que un propietario apueste por un caballo que no sea de su propiedad si en esa misma carrera corre algún caballo suyo.
+
+### En el diseño inicial no se creo una relación entre apuestas y propietarios ###
+
